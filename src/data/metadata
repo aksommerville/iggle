@@ -1,0 +1,14 @@
+fb=640x360
+title=Reddin Iggle
+title$=2
+author=AK Sommerville
+time=2025-02-28
+version=0.0.1
+lang=en
+players=1
+desc=Fly the bird with one button, and put all the things in their places.
+freedom=free
+copyright=(c) 2025 AK Sommerville
+genre=Action
+# iconImage= image id, should be 16x16
+contact=aksommerville@gmail.com
