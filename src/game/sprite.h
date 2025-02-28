@@ -12,6 +12,7 @@ struct sprite {
   uint8_t xform;
   uint32_t arg;
   int defunct;
+  int solid;
 };
 
 struct sprite_type {
@@ -43,7 +44,15 @@ void sprites_render();
 void sprites_drop_defunct();
 void sprites_defunct_all();
 
+int sprite_exists(const struct sprite *sprite);
 struct sprite *sprite_any_of_type(const struct sprite_type *type);
+
+/* Resolve any collisions and return nonzero if changed.
+ * I'm doing split-axis motion, so adjust only one axis at a time.
+ * (corrx,corry) are a cardinal normal vector indicating which direction we're allowed to correct toward.
+ * Against screen edges, we ignore (corr).
+ */
+int sprite_collide(struct sprite *sprite,double corrx,double corry);
 
 const struct sprite_type *sprite_type_by_id(uint16_t spritetype);
 

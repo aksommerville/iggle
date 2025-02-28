@@ -22,6 +22,13 @@ int play_begin() {
   return 0;
 }
 
+/* Trivial accessors.
+ */
+ 
+const uint8_t *play_get_map() {
+  return play.cellv;
+}
+
 /* Update.
  */
  

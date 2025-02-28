@@ -41,6 +41,7 @@ int play_begin();
 void play_update(double elapsed,int input,int pvinput);
 void play_render();
 int play_load_map(int mapid);
+const uint8_t *play_get_map();
 
 void hello_end();
 int hello_begin();

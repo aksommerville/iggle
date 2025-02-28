@@ -14,7 +14,7 @@ Entry for [Code for a Cause](https://itch.io/jam/code-for-a-cause), theme "KEEP 
 - - [x] Enough graphics to get started with. 32x32 tiles.
 - - [x] Real sprites framework.
 - - [x] Load maps.
-- - [ ] Flight, collisions, carrying. Everything we have in throwaway.
+- - [x] Flight, collisions, carrying. Everything we have in throwaway.
 - - [ ] Level termination.
 - Sat 2025-03-01
 - - [ ] Hazards.

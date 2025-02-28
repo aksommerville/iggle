@@ -86,6 +86,17 @@ struct sprite *sprite_any_of_type(const struct sprite_type *type) {
   return 0;
 }
 
+/* Confirm existence.
+ */
+ 
+int sprite_exists(const struct sprite *sprite) {
+  if (!sprite) return 0;
+  int i=spritec;
+  struct sprite **p=spritev;
+  for (;i-->0;p++) if (sprite==*p) return 1;
+  return 0;
+}
+
 /* Update or render all.
  */
 
