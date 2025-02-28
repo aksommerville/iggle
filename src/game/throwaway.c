@@ -253,9 +253,14 @@ static void draw_body(struct body *body) {
   graf_draw_rect(&g.graf,x+body->vx,y+body->vy,body->vw,body->vh,body->color);
 }
 
+static void draw_body_tile(struct body *body,uint8_t tileid,uint8_t xform) {
+  int x=(int)(body->x*NS_sys_tilesize),y=(int)(body->y*NS_sys_tilesize);
+  graf_draw_tile(&g.graf,g.texid_tiles,x,y,tileid,xform);
+}
+
 void throwaway_render() {
   graf_draw_rect(&g.graf,0,0,FBW,FBH,0x80a0e0ff);
   draw_body(&ta.ground);
-  draw_body(&ta.hero);
-  draw_body(&ta.pumpkin);
+  draw_body_tile(&ta.hero,0x10,(ta.flydir<0.0)?EGG_XFORM_XREV:0);
+  draw_body_tile(&ta.pumpkin,0x20,0);
 }
