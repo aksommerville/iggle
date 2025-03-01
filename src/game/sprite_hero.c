@@ -98,6 +98,32 @@ static void hero_update_fly(struct sprite *sprite,double elapsed) {
   }
 }
 
+/* Hacky fix for a problem that arises when one pumpkin sits by its toes on the edge of another.
+ * Since we're forcing the hero horizontally at grab, need to ensure that there's no other pumpkin colliding with him now.
+ */
+ 
+static void cheat_away_nearby_pumpkins(struct sprite *sprite) {
+  const double ythresh=0.125; // dy should be pretty much exact.
+  const double xthresh=1.000;
+  const double shuffle_distance=0.500;
+  int i=spritec;
+  while (i-->0) {
+    struct sprite *pumpkin=spritev[i];
+    if (!pumpkin->grabbable) continue;
+    double dy=pumpkin->y-sprite->y;
+    if ((dy<-ythresh)||(dy>ythresh)) continue;
+    double dx=pumpkin->x-sprite->x;
+    if ((dx<-xthresh)||(dx>xthresh)) continue;
+    if (dx>0.0) {
+      pumpkin->x+=shuffle_distance;
+      sprite_collide(pumpkin,-1.0,0.0);
+    } else {
+      pumpkin->x-=shuffle_distance;
+      sprite_collide(pumpkin,1.0,0.0);
+    }
+  }
+}
+
 /* Is there a pumpkin below me?
  */
  
@@ -106,7 +132,7 @@ static struct sprite *hero_check_pumpkin(const struct sprite *sprite) {
   double x=sprite->x,y=sprite->y+1.0;
   int i=spritec; while (i-->0) {
     struct sprite *pumpkin=spritev[i];
-    if (pumpkin->type!=&sprite_type_pumpkin) continue;
+    if (!pumpkin->grabbable) continue;
     double pl=pumpkin->x+pumpkin->px;
     if (x<=pl) continue;
     double pr=pl+pumpkin->pw;
@@ -127,6 +153,7 @@ static struct sprite *hero_check_and_apply_pumpkin(struct sprite *sprite) {
     sprite->x=SPRITE->pumpkin->x;
     sprite->ph=PH_NO_PUMPKIN+SPRITE->pumpkin->ph;
     SPRITE->pumpkin->solid=0;
+    cheat_away_nearby_pumpkins(sprite);
   }
   return SPRITE->pumpkin;
 }

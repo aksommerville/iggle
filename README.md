@@ -19,7 +19,7 @@ Help the eagle put all the things in their place by flapping his wings with the 
 - - [x] Flight, collisions, carrying. Everything we have in throwaway.
 - - [x] Level termination.
 - Sat 2025-03-01
-- - [ ] When one pumpkin sits on another just by the toes, you land on the lower one and things go a little weird.
+- - [x] When one pumpkin sits on another just by the toes, you land on the lower one and things go a little weird.
 - - - I think the best bet would be when you pick up the pumpkin, force nearby sprites within Iggle's vertical range away.
 - - [ ] Hazards.
 - - [ ] Scorekeeping.

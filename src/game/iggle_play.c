@@ -76,7 +76,7 @@ static int play_is_complete() {
   while (i-->0) {
     struct sprite *sprite=spritev[i];
     if (sprite->defunct) continue;
-    if (sprite->type!=&sprite_type_pumpkin) continue;
+    if (!sprite->goallable) continue;
     int row=(int)(sprite->y+sprite->py+sprite->ph+0.125);
     if ((row<0)||(row>=NS_sys_maph)) return 0; // Offscreen, definitely not on the goal.
     int cola=(int)(sprite->x+sprite->px); if (cola<0) cola=0;
@@ -199,6 +199,25 @@ int play_load_map(int mapid) {
       case CMD_map_sprite: play_spawn_sprite(cmd.argv[0],cmd.argv[1],(cmd.argv[2]<<8)|cmd.argv[3],(cmd.argv[4]<<24)|(cmd.argv[5]<<16)|(cmd.argv[6]<<8)|cmd.argv[7]); break;
     }
   }
+  
+  //XXX Testing, if we have a pumpkin sitting atop another one, shift it horizontally by a little under a meter.
+  int ai=spritec; while (ai-->0) {
+    struct sprite *a=spritev[ai];
+    if (a->type!=&sprite_type_pumpkin) continue;
+    int bi=spritec; while (bi-->0) {
+      if (ai==bi) continue;
+      struct sprite *b=spritev[bi];
+      if (b->type!=&sprite_type_pumpkin) continue;
+      double dx=b->x-a->x;
+      double dy=b->y-a->y;
+      if ((dx>=-0.001)&&(dx<=0.001)&&(dy>=0.999)&&(dy<=1.001)) {
+        fprintf(stderr,"FOUND PUMPKIN STACK. ADJUSTING TOP ONE.\n");
+        a->x+=0.875;
+        goto _done_test_;
+      }
+    }
+  }
+  _done_test_:;
   
   play.mapid=mapid;
   

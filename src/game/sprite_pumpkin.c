@@ -27,6 +27,8 @@ static int _pumpkin_init(struct sprite *sprite) {
   sprite->ph=1.0;
   sprite->tileid=0x20;
   sprite->solid=1;
+  sprite->grabbable=1;
+  sprite->goallable=1;
   return 0;
 }
 

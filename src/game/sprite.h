@@ -13,6 +13,8 @@ struct sprite {
   uint32_t arg;
   int defunct;
   int solid;
+  int grabbable;
+  int goallable;
 };
 
 struct sprite_type {
