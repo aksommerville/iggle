@@ -62,4 +62,8 @@ NS_FOR_EACH_spritetype
 
 void sprite_hero_button(struct sprite *sprite,int state);
 
+/* (tileid) in 0x04..0x08, the tiles that qualify a goal.
+ */
+int sprite_pumpkin_matches_qualifier(const struct sprite *sprite,uint8_t tileid);
+
 #endif

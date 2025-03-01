@@ -15,12 +15,15 @@ Entry for [Code for a Cause](https://itch.io/jam/code-for-a-cause), theme "KEEP 
 - - [x] Real sprites framework.
 - - [x] Load maps.
 - - [x] Flight, collisions, carrying. Everything we have in throwaway.
-- - [ ] Level termination.
+- - [x] Level termination.
 - Sat 2025-03-01
+- - [ ] When one pumpkin sits on another just by the toes, you land on the lower one and things go a little weird.
+- - - I think the best bet would be when you pick up the pumpkin, force nearby sprites within Iggle's vertical range away.
 - - [ ] Hazards.
 - - [ ] Scorekeeping.
 - - [ ] Hello and Farewell splashes.
 - - [ ] Proper maps.
+- - - Bonk-to-drop is not obvious. Ensure the first level or two have just one pumpkin, and then train the user on bonking.
 - Sun 2025-03-02
 - - [ ] Music.
 - - [ ] Sound effects.

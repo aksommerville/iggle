@@ -58,3 +58,24 @@ const struct sprite_type sprite_type_pumpkin={
   .init=_pumpkin_init,
   .update=_pumpkin_update,
 };
+
+/* Check qualifier.
+ */
+ 
+int sprite_pumpkin_matches_qualifier(const struct sprite *sprite,uint8_t tileid) {
+  if (!sprite||(sprite->type!=&sprite_type_pumpkin)) return 0;
+  switch (tileid) {
+    case 0x04: switch (sprite->tileid) { // circle
+        case 0x20: return 1; // pumpkin
+      } break;
+    case 0x05: { // square
+      } break;
+    case 0x06: { // red
+      } break;
+    case 0x07: { // green
+      } break;
+    case 0x08: { // blue
+      } break;
+  }
+  return 0;
+}
