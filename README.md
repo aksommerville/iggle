@@ -28,7 +28,7 @@ Help the eagle put all the things in their place by flapping his wings with the 
 - - [ ] Allow certain pumpkin tiles to resist transform (the ones with text)
 - - [ ] Hello and Farewell splashes.
 - - [ ] We should allow pumpkins to stack on the goal. It's hard to avoid, and hard to explain why that's not "on goal".
-- - [ ] Need a bigger font.
+- - [x] Need a bigger font.
 - - [ ] Proper maps.
 - - - Bonk-to-drop is not obvious. Ensure the first level or two have just one pumpkin, and then train the user on bonking.
 - - - 3-row apertures are surprisingly difficult to pass through.

@@ -116,7 +116,7 @@ int egg_client_init() {
   }
   
   if (!(g.font=font_new())) return -1;
-  if (font_add_image_resource(g.font,0x0020,RID_image_font9_0020)<0) return -1;
+  if (font_add_image_resource(g.font,0x0020,RID_image_font26_0020)<0) return -1;
   if (egg_texture_load_image(g.texid_tiles=egg_texture_new(),RID_image_tiles)<0) return -1;
   if (egg_texture_load_raw(g.texid_map=egg_texture_new(),FBW,FBH,0,0,0)<0) return -1;
   
