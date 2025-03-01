@@ -24,11 +24,11 @@ Help the eagle put all the things in their place by flapping his wings with the 
 - - [x] Hazards. ...no hazards
 - - [x] Scorekeeping.
 - - [x] Proper graphics.
-- - [ ] Make grabbing a little more tolerant. Landing on a pumpkin without grabbing it should be rare.
-- - [ ] Allow certain pumpkin tiles to resist transform (the ones with text)
+- - [x] Make grabbing a little more tolerant. Landing on a pumpkin without grabbing it should be rare.
+- - [x] Allow certain pumpkin tiles to resist transform (the ones with text)
 - - [x] Hello and Farewell splashes.
-- - [ ] We should allow pumpkins to stack on the goal. It's hard to avoid, and hard to explain why that's not "on goal".
-- - [ ] Cheat hero's hit box down at the top when flying, he hits the ceiling too soon.
+- - [x] We should allow pumpkins to stack on the goal. It's hard to avoid, and hard to explain why that's not "on goal".
+- - [x] Cheat hero's hit box down at the top when flying, he hits the ceiling too soon. ...no reason to do it only while flying, much easier to shorten him always.
 - - [x] Need a bigger font.
 - - [ ] Proper maps.
 - - - Bonk-to-drop is not obvious. Ensure the first level or two have just one pumpkin, and then train the user on bonking.

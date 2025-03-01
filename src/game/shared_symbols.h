@@ -18,6 +18,9 @@
 #define NS_tilesheet_family      0
 #define NS_tilesheet_weight      0
 
+#define NS_physics_solid 1
+#define NS_physics_goal 2
+
 #define NS_spritetype_hero 1
 #define NS_spritetype_pumpkin 2
 #define NS_FOR_EACH_spritetype \

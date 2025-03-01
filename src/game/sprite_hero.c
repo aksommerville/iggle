@@ -13,7 +13,7 @@
 #define BONK_VELOCITY_LOSS    0.666
 #define BONK_GRAVITY          0.000 /* m/s; after a bonk, gravity kicks in immediately. */
 #define BONK_BLACKOUT_TIME    0.250 /* s; after a bonk, we ignore input for so long. */
-#define PH_NO_PUMPKIN         1.000
+#define PH_NO_PUMPKIN         0.800
 
 struct sprite_hero {
   struct sprite hdr;
@@ -42,7 +42,7 @@ static void _hero_del(struct sprite *sprite) {
 static int _hero_init(struct sprite *sprite) {
   sprite->px=-0.45;
   sprite->pw= 0.90;
-  sprite->py=-0.50;
+  sprite->py=-0.30;
   sprite->ph=PH_NO_PUMPKIN;
   sprite->tileid=0x40;
   sprite->solid=1;
@@ -131,14 +131,16 @@ static void cheat_away_nearby_pumpkins(struct sprite *sprite) {
  
 static struct sprite *hero_check_pumpkin(const struct sprite *sprite) {
   if (SPRITE->blackout>0.0) return 0;
-  double x=sprite->x,y=sprite->y+1.0;
+  double y=sprite->y+1.0;
+  double l=sprite->x+sprite->px;
+  double r=l+sprite->pw;
   int i=spritec; while (i-->0) {
     struct sprite *pumpkin=spritev[i];
     if (!pumpkin->grabbable) continue;
     double pl=pumpkin->x+pumpkin->px;
-    if (x<=pl) continue;
+    if (r<=pl) continue;
     double pr=pl+pumpkin->pw;
-    if (x>=pr) continue;
+    if (l>=pr) continue;
     double pt=pumpkin->y+pumpkin->py;
     if (y<=pt) continue;
     double pb=pt+pumpkin->ph;

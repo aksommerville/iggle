@@ -31,6 +31,7 @@ extern struct g {
   int texid_map;
   int mode; // Do not modify directly; use iggle_set_mode().
   int pvinput;
+  uint8_t physics[256];
   
   double highscore;
   double recentscore;

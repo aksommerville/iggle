@@ -15,6 +15,7 @@ struct sprite {
   int solid;
   int grabbable;
   int goallable;
+  int ongoal; // Sprites with (goalable) must freshen this each update.
 };
 
 struct sprite_type {
@@ -63,9 +64,5 @@ NS_FOR_EACH_spritetype
 #undef _
 
 void sprite_hero_button(struct sprite *sprite,int state);
-
-/* (tileid) in 0x04..0x08, the tiles that qualify a goal.
- */
-int sprite_pumpkin_matches_qualifier(const struct sprite *sprite,uint8_t tileid);
 
 #endif

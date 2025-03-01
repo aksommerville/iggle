@@ -92,9 +92,12 @@ int sprite_collide(struct sprite *sprite,double corrx,double corry) {
     int row=rowa; for (;row<=rowz;row++,cellsrow+=NS_sys_mapw) {
       const uint8_t *cell=cellsrow;
       int col=cola; for (;col<=colz;col++,cell++) {
-        if (*cell) { // TODO For now every nonzero cell is solid. Probably need to get more refined about that.
-          physics_correct_for_cell(&l,&t,&r,&b,sprite,corrx,corry,col,row);
-          result=1;
+        switch (g.physics[*cell]) {
+          case NS_physics_solid:
+          case NS_physics_goal: {
+              physics_correct_for_cell(&l,&t,&r,&b,sprite,corrx,corry,col,row);
+              result=1;
+            } break;
         }
       }
     }

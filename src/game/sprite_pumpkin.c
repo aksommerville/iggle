@@ -39,42 +39,33 @@ static int _pumpkin_init(struct sprite *sprite) {
   return 0;
 }
 
-/* Update.
+/* Tileid 0x04..0x08, or 1 for the generic goal.
  */
  
-static void _pumpkin_update(struct sprite *sprite,double elapsed) {
-  // When Iggle carries us, he sets (solid) false. Don't do anything during those times.
-  if (sprite->solid) {
-    if ((SPRITE->gravity+=GRAVITY_RATE*elapsed)>=GRAVITY_LIMIT) SPRITE->gravity=GRAVITY_LIMIT;
-    double gravity=SPRITE->gravity;
-    if (gravity<GRAVITY_MIN) gravity=GRAVITY_MIN;
-    sprite->y+=gravity*elapsed;
-    if (sprite_collide(sprite,0.0,-1.0)) {
-      SPRITE->gravity=0.0;
-    }
-  } else {
-    SPRITE->gravity=0.0;
+static int get_goal_qualifier(int col,int row) {
+  int x;
+  const uint8_t *cellrow=play_get_map()+row*NS_sys_mapw;
+  for (x=col;x-->0;) {
+    uint8_t tileid=cellrow[x];
+    if ((tileid>=0x04)&&(tileid<=0x08)) return tileid;
+    uint8_t physics=g.physics[tileid];
+    if (physics!=NS_physics_goal) break;
   }
+  for (x=col;x<NS_sys_mapw;x++) {
+    uint8_t tileid=cellrow[x];
+    if ((tileid>=0x04)&&(tileid<=0x08)) return tileid;
+    uint8_t physics=g.physics[tileid];
+    if (physics!=NS_physics_goal) break;
+  }
+  return 1;
 }
 
-/* Type definition.
+/* Compare a qualifier to this pumpkin.
  */
  
-const struct sprite_type sprite_type_pumpkin={
-  .name="pumpkin",
-  .objlen=sizeof(struct sprite_pumpkin),
-  .del=_pumpkin_del,
-  .init=_pumpkin_init,
-  .update=_pumpkin_update,
-};
-
-/* Check qualifier.
- */
- 
-int sprite_pumpkin_matches_qualifier(const struct sprite *sprite,uint8_t tileid) {
-  if (!sprite||(sprite->type!=&sprite_type_pumpkin)) return 0;
-  switch (tileid) {
-    case 0x00: return 1; // Unqualified: Matches anything.
+static int qualifier_agrees_with_pumpkin(uint8_t qualifier,const struct sprite *sprite) {
+  switch (qualifier) {
+    case 0x01: return 1; // Unqualified: Matches anything.
     case 0x04: switch (sprite->tileid) { // circle
         case 0x50: return 1; // pumpkin
         case 0x51: return 1; // tomato
@@ -101,3 +92,99 @@ int sprite_pumpkin_matches_qualifier(const struct sprite *sprite,uint8_t tileid)
   }
   return 0;
 }
+
+/* Check goal.
+ */
+ 
+static void pumpkin_check_goal(struct sprite *sprite) {
+  sprite->ongoal=0;
+  
+  int row=(int)(sprite->y+sprite->py+sprite->ph+0.010);
+  if ((row>=0)&&(row<NS_sys_maph)) {
+    int cola=(int)(sprite->x+sprite->px);
+    if (cola<0) cola=0;
+    int colz=(int)(sprite->x+sprite->px+sprite->pw-0.000001);
+    if (colz>=NS_sys_mapw) colz=NS_sys_mapw-1;
+    const uint8_t *src=play_get_map()+row*NS_sys_mapw+cola;
+    int col=cola;
+    for (;col<=colz;col++,src++) {
+      uint8_t physics=g.physics[*src];
+      if (physics==NS_physics_goal) {
+        uint8_t qualifier=get_goal_qualifier(col,row);
+        if (qualifier_agrees_with_pumpkin(qualifier,sprite)) {
+          sprite->ongoal=qualifier;
+          return;
+        }
+      }
+    }
+  }
+  
+  double sl=sprite->x+sprite->px;
+  double sr=sl+sprite->pw;
+  double y=sprite->y+sprite->py+sprite->ph+0.010;
+  int i=spritec;
+  while (i-->0) {
+    const struct sprite *other=spritev[i];
+    if (!other->goallable) continue;
+    if (!other->ongoal) continue;
+    if (!qualifier_agrees_with_pumpkin(other->ongoal,sprite)) continue;
+    double ot=other->y+other->py;
+    if (y<ot) continue;
+    if (y>ot+other->ph) continue;
+    double ol=other->x+other->px;
+    if (ol>=sr) continue;
+    double or=ol+other->pw;
+    if (or<=sl) continue;
+    sprite->ongoal=other->ongoal;
+    return;
+  }
+}
+
+/* Update.
+ */
+ 
+static void _pumpkin_update(struct sprite *sprite,double elapsed) {
+  // When Iggle carries us, he sets (solid) false.
+  // Not carried, apply gravity, and check goal state only when gravity terminates.
+  if (sprite->solid) {
+    int wasfalling=(SPRITE->gravity>0.0);
+    if ((SPRITE->gravity+=GRAVITY_RATE*elapsed)>=GRAVITY_LIMIT) SPRITE->gravity=GRAVITY_LIMIT;
+    double gravity=SPRITE->gravity;
+    if (gravity<GRAVITY_MIN) gravity=GRAVITY_MIN;
+    sprite->y+=gravity*elapsed;
+    if (sprite_collide(sprite,0.0,-1.0)) {
+      if (wasfalling) {
+        if (g.enable_sound) egg_play_sound(RID_sound_pumpkinfall);
+        pumpkin_check_goal(sprite);
+      }
+      SPRITE->gravity=0.0;
+    }
+    
+  // If we're being carried, check the goal every update. It's not that big a deal.
+  } else {
+    SPRITE->gravity=0.0;
+    pumpkin_check_goal(sprite);
+  }
+}
+
+/* Render.
+ */
+ 
+static void _pumpkin_render(struct sprite *sprite,int x,int y) {
+  uint8_t xform=sprite->xform;
+  // The two books should not transform, because they have visible text. Not that the text matters.
+  if ((sprite->tileid==0x53)||(sprite->tileid==0x56)) xform=0;
+  graf_draw_tile(&g.graf,g.texid_tiles,x,y,sprite->tileid,xform);
+}
+
+/* Type definition.
+ */
+ 
+const struct sprite_type sprite_type_pumpkin={
+  .name="pumpkin",
+  .objlen=sizeof(struct sprite_pumpkin),
+  .del=_pumpkin_del,
+  .init=_pumpkin_init,
+  .update=_pumpkin_update,
+  .render=_pumpkin_render,
+};

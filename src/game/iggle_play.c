@@ -48,34 +48,8 @@ static void play_win_level() {
 }
 
 /* Test completion.
- * Pumpkins must be resting on a goal whose logo agrees with their appearance.
- * They can't rest on each other.
+ * The pumpkins figure it out, we just poll them.
  */
- 
-static int tile_is_goal(uint8_t tileid,int col,int row,const struct sprite *sprite) {
-  // We ought to use a tilesheet for this, but whatever it's a tiny game.
-  if (tileid<0x02) return 0;
-  if (tileid>0x09) return 0;
-  // Some goals have a qualifier tile. If present, the pumpkin must satisfy that criterion.
-  int qualifier=0;
-  if ((tileid>=0x04)&&(tileid<=0x08)) {
-    qualifier=tileid;
-  } else {
-    int qx=col-1; for (;qx>=0;qx--) {
-      uint8_t qt=play.cellv[row*NS_sys_mapw+qx];
-      if ((qt<0x02)||(qt>0x09)) break;
-      if ((qt>=0x04)&&(qt<=0x08)) { qualifier=qt; break; }
-    }
-    if (!qualifier) {
-      for (qx=col+1;qx<NS_sys_mapw;qx++) {
-        uint8_t qt=play.cellv[row*NS_sys_mapw+qx];
-        if ((qt<0x02)||(qt>0x09)) break;
-        if ((qt>=0x04)&&(qt<=0x08)) { qualifier=qt; break; }
-      }
-    }
-  }
-  return sprite_pumpkin_matches_qualifier(sprite,qualifier);
-}
  
 static int play_is_complete() {
   int i=spritec;
@@ -83,19 +57,7 @@ static int play_is_complete() {
     struct sprite *sprite=spritev[i];
     if (sprite->defunct) continue;
     if (!sprite->goallable) continue;
-    int row=(int)(sprite->y+sprite->py+sprite->ph+0.125);
-    if ((row<0)||(row>=NS_sys_maph)) return 0; // Offscreen, definitely not on the goal.
-    int cola=(int)(sprite->x+sprite->px); if (cola<0) cola=0;
-    int colz=(int)(sprite->x+sprite->px+sprite->pw-0.000001); if (colz>=NS_sys_mapw) colz=NS_sys_mapw-1;
-    int ok=0;
-    const uint8_t *cell=play.cellv+row*NS_sys_mapw+cola;
-    int col=cola; for (;col<=colz;col++,cell++) {
-      if (tile_is_goal(*cell,col,row,sprite)) {
-        ok=1;
-        break;
-      }
-    }
-    if (!ok) return 0;
+    if (!sprite->ongoal) return 0;
   }
   return 1;
 }

@@ -97,7 +97,17 @@ void iggle_save_settings() {
   egg_store_set("enable_sound",12,&v,1);
   // Language is exposed to the user similarly, but that's a whole separate thing.
 }
-  
+
+static int iggle_load_tilesheet(const void *v,int c) {
+  struct rom_tilesheet_reader reader;
+  if (rom_tilesheet_reader_init(&reader,v,c)<0) return -1;
+  struct rom_tilesheet_entry entry;
+  while (rom_tilesheet_reader_next(&entry,&reader)>0) {
+    if (entry.tableid!=NS_tilesheet_physics) continue;
+    memcpy(g.physics+entry.tileid,entry.v,entry.c);
+  }
+  return 0;
+}
 
 void egg_client_quit(int status) {
 }
@@ -119,9 +129,9 @@ int egg_client_init() {
   while (res=rom_reader_next(&reader)) {
     switch (res->tid) {
       case EGG_TID_map:
-      case EGG_TID_tilesheet:
       case EGG_TID_sprite:
         break;
+      case EGG_TID_tilesheet: iggle_load_tilesheet(res->v,res->c); continue;
       default: continue;
     }
     if (g.resc>=g.resa) {
