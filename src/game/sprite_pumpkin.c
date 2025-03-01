@@ -25,7 +25,7 @@ static int _pumpkin_init(struct sprite *sprite) {
   sprite->py=-0.5;
   sprite->pw=1.0;
   sprite->ph=1.0;
-  sprite->tileid=0x20;
+  sprite->tileid=0x50;
   sprite->solid=1;
   sprite->grabbable=1;
   sprite->goallable=1;
@@ -67,8 +67,9 @@ const struct sprite_type sprite_type_pumpkin={
 int sprite_pumpkin_matches_qualifier(const struct sprite *sprite,uint8_t tileid) {
   if (!sprite||(sprite->type!=&sprite_type_pumpkin)) return 0;
   switch (tileid) {
+    case 0x00: return 1; // Unqualified: Matches anything.
     case 0x04: switch (sprite->tileid) { // circle
-        case 0x20: return 1; // pumpkin
+        case 0x50: return 1; // pumpkin
       } break;
     case 0x05: { // square
       } break;

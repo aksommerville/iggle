@@ -44,7 +44,7 @@ static int _hero_init(struct sprite *sprite) {
   sprite->pw= 0.90;
   sprite->py=-0.50;
   sprite->ph=PH_NO_PUMPKIN;
-  sprite->tileid=0x10;
+  sprite->tileid=0x40;
   sprite->solid=1;
   SPRITE->facedir=1.0f;
   SPRITE->velocity=HORZ_MIN;
@@ -205,7 +205,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
    * For now I don't expect any outside kinetics, so we don't need to check footing after the first detection, it can't change.
    */
   if (SPRITE->grounded) {
-    sprite->tileid=0x10;
+    sprite->tileid=0x40;
     
   /* Not (grounded), we will move horizontally and vertically -- but Up and Down are separate paths.
    */

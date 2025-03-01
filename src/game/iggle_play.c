@@ -56,16 +56,20 @@ static int tile_is_goal(uint8_t tileid,int col,int row,const struct sprite *spri
   if (tileid>0x09) return 0;
   // Some goals have a qualifier tile. If present, the pumpkin must satisfy that criterion.
   int qualifier=0;
-  int qx=col-1; for (;qx>=0;qx--) {
-    uint8_t qt=play.cellv[row*NS_sys_mapw+qx];
-    if ((qt<0x02)||(qt>0x09)) break;
-    if ((qt>=0x04)&&(qt<=0x08)) { qualifier=qt; break; }
-  }
-  if (!qualifier) {
-    for (qx=col+1;qx<NS_sys_mapw;qx++) {
+  if ((tileid>=0x04)&&(tileid<=0x08)) {
+    qualifier=tileid;
+  } else {
+    int qx=col-1; for (;qx>=0;qx--) {
       uint8_t qt=play.cellv[row*NS_sys_mapw+qx];
       if ((qt<0x02)||(qt>0x09)) break;
       if ((qt>=0x04)&&(qt<=0x08)) { qualifier=qt; break; }
+    }
+    if (!qualifier) {
+      for (qx=col+1;qx<NS_sys_mapw;qx++) {
+        uint8_t qt=play.cellv[row*NS_sys_mapw+qx];
+        if ((qt<0x02)||(qt>0x09)) break;
+        if ((qt>=0x04)&&(qt<=0x08)) { qualifier=qt; break; }
+      }
     }
   }
   return sprite_pumpkin_matches_qualifier(sprite,qualifier);
@@ -199,25 +203,6 @@ int play_load_map(int mapid) {
       case CMD_map_sprite: play_spawn_sprite(cmd.argv[0],cmd.argv[1],(cmd.argv[2]<<8)|cmd.argv[3],(cmd.argv[4]<<24)|(cmd.argv[5]<<16)|(cmd.argv[6]<<8)|cmd.argv[7]); break;
     }
   }
-  
-  //XXX Testing, if we have a pumpkin sitting atop another one, shift it horizontally by a little under a meter.
-  int ai=spritec; while (ai-->0) {
-    struct sprite *a=spritev[ai];
-    if (a->type!=&sprite_type_pumpkin) continue;
-    int bi=spritec; while (bi-->0) {
-      if (ai==bi) continue;
-      struct sprite *b=spritev[bi];
-      if (b->type!=&sprite_type_pumpkin) continue;
-      double dx=b->x-a->x;
-      double dy=b->y-a->y;
-      if ((dx>=-0.001)&&(dx<=0.001)&&(dy>=0.999)&&(dy<=1.001)) {
-        fprintf(stderr,"FOUND PUMPKIN STACK. ADJUSTING TOP ONE.\n");
-        a->x+=0.875;
-        goto _done_test_;
-      }
-    }
-  }
-  _done_test_:;
   
   play.mapid=mapid;
   
