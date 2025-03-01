@@ -68,6 +68,7 @@ static void hero_update_horizontal(struct sprite *sprite,double elapsed) {
     egg_play_sound(RID_sound_horzbonk);
     if ((SPRITE->facedir*=-1.0)<0) sprite->xform=EGG_XFORM_XREV;
     else sprite->xform=0;
+    if (sprite_exists(SPRITE->pumpkin)) SPRITE->pumpkin->xform^=EGG_XFORM_XREV;
   }
 }
 
@@ -90,6 +91,7 @@ static void hero_update_fly(struct sprite *sprite,double elapsed) {
     } else {
       egg_play_sound(RID_sound_emptybonk);
     }
+    //TODO bonk face
     SPRITE->flap=0;
     SPRITE->velocity*=BONK_VELOCITY_LOSS;
     SPRITE->gravity=BONK_GRAVITY;
@@ -175,6 +177,7 @@ static void hero_update_fall(struct sprite *sprite,double elapsed) {
       egg_play_sound(RID_sound_alight);
     }
     SPRITE->grounded=1;
+    SPRITE->velocity=HORZ_MIN;
   }
 }
 
@@ -205,7 +208,6 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
    * For now I don't expect any outside kinetics, so we don't need to check footing after the first detection, it can't change.
    */
   if (SPRITE->grounded) {
-    sprite->tileid=0x40;
     
   /* Not (grounded), we will move horizontally and vertically -- but Up and Down are separate paths.
    */
@@ -224,6 +226,24 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   }
 }
 
+/* Render.
+ */
+ 
+static void _hero_render(struct sprite *sprite,int dstx,int dsty) {
+  uint8_t tileid=sprite->tileid;
+  if (SPRITE->grounded) {
+    // The first tile.
+  } else if ((SPRITE->blackout>0.0)&&!SPRITE->pumpkin) {
+    tileid+=0x06;
+  } else if (SPRITE->flap) {
+    tileid+=0x04;
+  } else {
+    tileid+=0x02;
+  }
+  if (SPRITE->pumpkin) tileid+=0x01;
+  graf_draw_tile(&g.graf,g.texid_tiles,dstx,dsty,tileid,sprite->xform);
+}
+
 /* Type definition.
  */
  
@@ -233,6 +253,7 @@ const struct sprite_type sprite_type_hero={
   .del=_hero_del,
   .init=_hero_init,
   .update=_hero_update,
+  .render=_hero_render,
 };
 
 /* Button state changed. Search for sprite.

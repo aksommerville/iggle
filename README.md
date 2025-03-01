@@ -23,7 +23,7 @@ Help the eagle put all the things in their place by flapping his wings with the 
 - - - I think the best bet would be when you pick up the pumpkin, force nearby sprites within Iggle's vertical range away.
 - - [ ] Hazards.
 - - [ ] Scorekeeping.
-- - [ ] Proper graphics.
+- - [x] Proper graphics.
 - - [ ] Hello and Farewell splashes.
 - - [ ] Proper maps.
 - - - Bonk-to-drop is not obvious. Ensure the first level or two have just one pumpkin, and then train the user on bonking.
