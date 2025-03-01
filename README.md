@@ -6,6 +6,8 @@ Requires [Egg](https://github.com/aksommerville/egg) to build.
 
 Entry for [Code for a Cause](https://itch.io/jam/code-for-a-cause), theme "KEEP MOVING FORWARD".
 
+Help the eagle put all the things in their place by flapping his wings with the space bar.
+
 ## Agenda
 
 - Fri 2025-02-28
@@ -21,10 +23,14 @@ Entry for [Code for a Cause](https://itch.io/jam/code-for-a-cause), theme "KEEP 
 - - - I think the best bet would be when you pick up the pumpkin, force nearby sprites within Iggle's vertical range away.
 - - [ ] Hazards.
 - - [ ] Scorekeeping.
+- - [ ] Proper graphics.
 - - [ ] Hello and Farewell splashes.
 - - [ ] Proper maps.
 - - - Bonk-to-drop is not obvious. Ensure the first level or two have just one pumpkin, and then train the user on bonking.
+- - - 3-row apertures are surprisingly difficult to pass through.
+- - - 45-degree slopes, both ceiling and floor, are pretty annoying.
 - Sun 2025-03-02
+- - [ ] Press Start to reset level.
 - - [ ] Music.
 - - [ ] Sound effects.
 - - [ ] Itch page.

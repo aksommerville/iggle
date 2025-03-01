@@ -14,6 +14,7 @@ void farewell_end() {
  */
  
 int farewell_begin() {
+  egg_play_song(RID_song_whirligig,0,1);
   return 0;
 }
 

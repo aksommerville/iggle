@@ -15,6 +15,7 @@ void hello_end() {
  
 int hello_begin() {
   memset(&hello,0,sizeof(struct hello));
+  egg_play_song(RID_song_whirligig,0,1);
   return 0;
 }
 
