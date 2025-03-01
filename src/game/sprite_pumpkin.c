@@ -1,3 +1,8 @@
+/* sprite_pumpkin.c
+ * arg: u8 tileid, u24 reserved
+ * (tileid) zero defaults to 0x50, pumpkin.
+ */
+
 #include "iggle.h"
 
 #define GRAVITY_MIN   3.000
@@ -25,7 +30,9 @@ static int _pumpkin_init(struct sprite *sprite) {
   sprite->py=-0.5;
   sprite->pw=1.0;
   sprite->ph=1.0;
-  sprite->tileid=0x50;
+  if (!(sprite->tileid=sprite->arg>>24)) {
+    sprite->tileid=0x50;
+  }
   sprite->solid=1;
   sprite->grabbable=1;
   sprite->goallable=1;
@@ -70,14 +77,26 @@ int sprite_pumpkin_matches_qualifier(const struct sprite *sprite,uint8_t tileid)
     case 0x00: return 1; // Unqualified: Matches anything.
     case 0x04: switch (sprite->tileid) { // circle
         case 0x50: return 1; // pumpkin
+        case 0x51: return 1; // tomato
+        case 0x54: return 1; // globe
+        case 0x55: return 1; // watermelon
       } break;
-    case 0x05: { // square
+    case 0x05: switch (sprite->tileid) { // square
+        case 0x52: return 1; // radio
+        case 0x53: return 1; // red book
+        case 0x56: return 1; // green book
       } break;
-    case 0x06: { // red
+    case 0x06: switch (sprite->tileid) { // red
+        case 0x51: return 1; // tomato
+        case 0x53: return 1; // red book
       } break;
-    case 0x07: { // green
+    case 0x07: switch (sprite->tileid) { // green
+        case 0x55: return 1; // watermelon
+        case 0x56: return 1; // green book
       } break;
-    case 0x08: { // blue
+    case 0x08: switch (sprite->tileid) { // blue
+        case 0x54: return 1; // globe
+        case 0x52: return 1; // radio
       } break;
   }
   return 0;
