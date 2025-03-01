@@ -65,7 +65,7 @@ static void hero_update_horizontal(struct sprite *sprite,double elapsed) {
   
   sprite->x+=SPRITE->velocity*elapsed*SPRITE->facedir;
   if (sprite_collide(sprite,-SPRITE->facedir,0.0)) {
-    egg_play_sound(RID_sound_horzbonk);
+    if (g.enable_sound) egg_play_sound(RID_sound_horzbonk);
     if ((SPRITE->facedir*=-1.0)<0) sprite->xform=EGG_XFORM_XREV;
     else sprite->xform=0;
     if (sprite_exists(SPRITE->pumpkin)) SPRITE->pumpkin->xform^=EGG_XFORM_XREV;
@@ -85,11 +85,11 @@ static void hero_update_fly(struct sprite *sprite,double elapsed) {
       if (sprite_exists(SPRITE->pumpkin)) {
         SPRITE->pumpkin->solid=1;
       }
-      egg_play_sound(RID_sound_fullbonk);
+      if (g.enable_sound) egg_play_sound(RID_sound_fullbonk);
       SPRITE->pumpkin=0;
       sprite->ph=PH_NO_PUMPKIN;
     } else {
-      egg_play_sound(RID_sound_emptybonk);
+      if (g.enable_sound) egg_play_sound(RID_sound_emptybonk);
     }
     //TODO bonk face
     SPRITE->flap=0;
@@ -151,7 +151,7 @@ static struct sprite *hero_check_pumpkin(const struct sprite *sprite) {
 static struct sprite *hero_check_and_apply_pumpkin(struct sprite *sprite) {
   if (SPRITE->pumpkin) return 0;
   if (SPRITE->pumpkin=hero_check_pumpkin(sprite)) {
-    egg_play_sound(RID_sound_grab);
+    if (g.enable_sound) egg_play_sound(RID_sound_grab);
     sprite->x=SPRITE->pumpkin->x;
     sprite->ph=PH_NO_PUMPKIN+SPRITE->pumpkin->ph;
     SPRITE->pumpkin->solid=0;
@@ -171,10 +171,10 @@ static void hero_update_fall(struct sprite *sprite,double elapsed) {
   sprite->y+=SPRITE->gravity*elapsed;
   if (sprite_collide(sprite,0.0,-1.0)) {
     if (SPRITE->pumpkin) {
-      egg_play_sound(RID_sound_alight);
+      if (g.enable_sound) egg_play_sound(RID_sound_alight);
     } else if (hero_check_and_apply_pumpkin(sprite)) {
     } else {
-      egg_play_sound(RID_sound_alight);
+      if (g.enable_sound) egg_play_sound(RID_sound_alight);
     }
     SPRITE->grounded=1;
     SPRITE->velocity=HORZ_MIN;
@@ -263,7 +263,7 @@ void sprite_hero_button(struct sprite *sprite,int state) {
   if (!sprite||(sprite->type!=&sprite_type_hero)) return;
   if (SPRITE->button=state) {
     if (SPRITE->blackout<=0.0) {
-      egg_play_sound(RID_sound_flap);
+      if (g.enable_sound) egg_play_sound(RID_sound_flap);
       SPRITE->button_clock=0.0;
       SPRITE->gravity=0.0;
       SPRITE->flap=1;

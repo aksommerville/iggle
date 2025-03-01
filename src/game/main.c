@@ -79,6 +79,26 @@ int iggle_check_highscore(double score) {
   return 1;
 }
 
+static void iggle_load_settings() {
+  char v;
+  if (egg_store_get(&v,1,"enable_music",12)==1) {
+    g.enable_music=(v=='1');
+  }
+  if (egg_store_get(&v,1,"enable_sound",12)==1) {
+    g.enable_sound=(v=='1');
+  }
+}
+
+void iggle_save_settings() {
+  char v;
+  v=g.enable_music?'1':'0';
+  egg_store_set("enable_music",12,&v,1);
+  v=g.enable_sound?'1':'0';
+  egg_store_set("enable_sound",12,&v,1);
+  // Language is exposed to the user similarly, but that's a whole separate thing.
+}
+  
+
 void egg_client_quit(int status) {
 }
 
@@ -117,13 +137,18 @@ int egg_client_init() {
   
   if (!(g.font=font_new())) return -1;
   if (font_add_image_resource(g.font,0x0020,RID_image_font26_0020)<0) return -1;
+  if (!(g.fontsmall=font_new())) return -1;
+  if (font_add_image_resource(g.fontsmall,0x0020,RID_image_font9_0020)<0) return -1;
   if (egg_texture_load_image(g.texid_tiles=egg_texture_new(),RID_image_tiles)<0) return -1;
   if (egg_texture_load_raw(g.texid_map=egg_texture_new(),FBW,FBH,0,0,0)<0) return -1;
   
   srand_auto();
   
+  g.enable_music=1;
+  g.enable_sound=1;
+  iggle_load_settings();
   iggle_load_highscore();
-  if (iggle_set_mode(IGGLE_MODE_PLAY)<0) return -1;//XXX HELLO
+  if (iggle_set_mode(IGGLE_MODE_HELLO)<0) return -1;
   
   return 0;
 }

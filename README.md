@@ -21,13 +21,14 @@ Help the eagle put all the things in their place by flapping his wings with the 
 - Sat 2025-03-01
 - - [x] When one pumpkin sits on another just by the toes, you land on the lower one and things go a little weird.
 - - - I think the best bet would be when you pick up the pumpkin, force nearby sprites within Iggle's vertical range away.
-- - [ ] Hazards.
+- - [x] Hazards. ...no hazards
 - - [x] Scorekeeping.
 - - [x] Proper graphics.
 - - [ ] Make grabbing a little more tolerant. Landing on a pumpkin without grabbing it should be rare.
 - - [ ] Allow certain pumpkin tiles to resist transform (the ones with text)
-- - [ ] Hello and Farewell splashes.
+- - [x] Hello and Farewell splashes.
 - - [ ] We should allow pumpkins to stack on the goal. It's hard to avoid, and hard to explain why that's not "on goal".
+- - [ ] Cheat hero's hit box down at the top when flying, he hits the ceiling too soon.
 - - [x] Need a bigger font.
 - - [ ] Proper maps.
 - - - Bonk-to-drop is not obvious. Ensure the first level or two have just one pumpkin, and then train the user on bonking.
@@ -35,7 +36,7 @@ Help the eagle put all the things in their place by flapping his wings with the 
 - - - 45-degree slopes, both ceiling and floor, are pretty annoying.
 - Sun 2025-03-02
 - - [ ] Press Start to reset level.
-- - [ ] Music.
+- - [x] Music.
 - - [ ] Sound effects.
 - - [ ] Itch page.
 - - [ ] Have an arguably complete game by EOD. I don't want to do a lot during the week.

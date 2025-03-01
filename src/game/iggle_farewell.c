@@ -1,6 +1,6 @@
 #include "iggle.h"
 
-#define LABEL_LIMIT 2
+#define LABEL_LIMIT 3
 
 struct farewell {
   struct label {
@@ -71,8 +71,9 @@ static struct label *farewell_add_time_label(int strix,double sf) {
  
 int farewell_begin() {
   memset(&farewell,0,sizeof(farewell));
-  egg_play_song(RID_song_whirligig,0,1);
+  if (g.enable_music) egg_play_song(RID_song_whirligig,0,1);
   
+  farewell_add_static_label(6);
   farewell_add_time_label(3,g.recentscore);
   if (g.recentscore<=g.highscore) {
     farewell_add_static_label(5);
@@ -111,7 +112,7 @@ void farewell_update(double elapsed,int input,int pvinput) {
  */
  
 void farewell_render() {
-  graf_draw_rect(&g.graf,0,0,FBW,FBH,0x800000ff);
+  graf_draw_rect(&g.graf,0,0,FBW,FBH,0x004000ff);
   struct label *label=farewell.labelv;
   int i=farewell.labelc;
   for (;i-->0;label++) {

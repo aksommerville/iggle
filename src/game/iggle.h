@@ -26,6 +26,7 @@ extern struct g {
   
   struct graf graf;
   struct font *font;
+  struct font *fontsmall;
   int texid_tiles;
   int texid_map;
   int mode; // Do not modify directly; use iggle_set_mode().
@@ -33,6 +34,8 @@ extern struct g {
   
   double highscore;
   double recentscore;
+  int enable_music;
+  int enable_sound;
 } g;
 
 /* Checks the global (highscore). Updates and returns nonzero if this is a new highscore.
@@ -40,6 +43,9 @@ extern struct g {
  * Also stashes (score) as (g.recentscore), for farewell's convenience.
  */
 int iggle_check_highscore(double score);
+
+// Call after you change (enable_music,enable_sound).
+void iggle_save_settings();
 
 int iggle_set_mode(int mode);
 

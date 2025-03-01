@@ -26,7 +26,7 @@ void play_end() {
 int play_begin() {
   memset(&play,0,sizeof(play));
   if (play_load_map(1)<0) return -1;
-  egg_play_song(RID_song_longhorn,0,1);
+  if (g.enable_music) egg_play_song(RID_song_longhorn,0,1);
   return 0;
 }
 
