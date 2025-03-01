@@ -35,6 +35,50 @@ int iggle_res_get(void *dstpp,int tid,int rid) {
   return 0;
 }
 
+void iggle_load_highscore() {
+  g.highscore=999999.999;
+  char src[256];
+  int srcc=egg_store_get(src,sizeof(src),"highscore",9);
+  if ((srcc<1)||(srcc>sizeof(src))) return;
+  g.highscore=0.0;
+  int srcp=0;
+  for (;srcp<srcc;srcp++) {
+    int digit=src[srcp]-'0';
+    if ((digit<0)||(digit>9)) {
+      g.highscore=999999999.0;
+      break;
+    }
+    g.highscore*=10.0;
+    g.highscore+=digit;
+  }
+  g.highscore/=1000.0;
+}
+
+void iggle_save_highscore() {
+  int ms=(int)(g.highscore*1000.0);
+  if (ms>999999999) ms=999999999;
+  char tmp[]={
+    '0'+(ms/100000000)%10,
+    '0'+(ms/ 10000000)%10,
+    '0'+(ms/  1000000)%10,
+    '0'+(ms/   100000)%10,
+    '0'+(ms/    10000)%10,
+    '0'+(ms/     1000)%10,
+    '0'+(ms/      100)%10,
+    '0'+(ms/       10)%10,
+    '0'+(ms          )%10,
+  };
+  egg_store_set("highscore",9,tmp,sizeof(tmp));
+}
+
+int iggle_check_highscore(double score) {
+  g.recentscore=score;
+  if (score>g.highscore) return 0;
+  g.highscore=score;
+  iggle_save_highscore();
+  return 1;
+}
+
 void egg_client_quit(int status) {
 }
 
@@ -78,6 +122,7 @@ int egg_client_init() {
   
   srand_auto();
   
+  iggle_load_highscore();
   if (iggle_set_mode(IGGLE_MODE_PLAY)<0) return -1;//XXX HELLO
   
   return 0;

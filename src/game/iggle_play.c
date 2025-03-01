@@ -11,6 +11,7 @@ struct play {
   const uint8_t *cmdv;
   int cmdc;
   double complete_clock;
+  double play_time; // For scoring purposes. All levels.
 } play={0};
 
 /* End.
@@ -41,6 +42,7 @@ const uint8_t *play_get_map() {
  
 static void play_win_level() {
   if (play_load_map(play.mapid+1)<0) {
+    iggle_check_highscore(play.play_time);
     iggle_set_mode(IGGLE_MODE_FAREWELL);
   }
 }
@@ -102,12 +104,10 @@ static int play_is_complete() {
  */
  
 void play_update(double elapsed,int input,int pvinput) {
-  if ((input&EGG_BTN_WEST)&&!(pvinput&EGG_BTN_WEST)) { // XXX B to end game
-    iggle_set_mode(IGGLE_MODE_FAREWELL);
-    return;
-  }
+
   if ((input&EGG_BTN_SOUTH)&&!(pvinput&EGG_BTN_SOUTH)) sprite_hero_button(sprite_any_of_type(&sprite_type_hero),1);
   else if (!(input&EGG_BTN_SOUTH)&&(pvinput&EGG_BTN_SOUTH)) sprite_hero_button(sprite_any_of_type(&sprite_type_hero),0);
+
   sprites_update(elapsed);
   sprites_drop_defunct();
   
@@ -115,20 +115,71 @@ void play_update(double elapsed,int input,int pvinput) {
     if ((play.complete_clock+=elapsed)>=COMPLETE_DEBOUNCE_TIME) {
       play_win_level();
     }
-  } else if (play.complete_clock>0.0) {
+  } else {
     // If it's complete and then not, roll the clock back down rather than resetting it.
-    play.complete_clock-=elapsed;
+    if (play.complete_clock>0.0) {
+      play.complete_clock-=elapsed;
+    }
+    // Play time for tax purposes doesn't count during the ending debounce.
+    play.play_time+=elapsed;
   }
+}
+
+/* Represent time as tiles.
+ * Digits are in row 7: 0..9, colon, dot.
+ * Tile zero is blank.
+ */
+ 
+static int play_repr_clock(uint8_t *dst,int dsta,double sf) {
+  if (dsta<9) return 0;
+  int ms=(int)(sf*1000.0);
+  int sec=ms/1000; ms%=1000;
+  int min=sec/60; sec%=60;
+  // We could of course add digits to min, but 99 is more minutes than anyone will be playing this game ;)
+  if (min>99) { min=sec=99; ms=999; }
+  int dstc=0;
+  if (min>=10) dst[dstc++]=0x70+min/10;
+  dst[dstc++]=0x70+min%10;
+  dst[dstc++]=0x7a;
+  dst[dstc++]=0x70+sec/10;
+  dst[dstc++]=0x70+sec%10;
+  dst[dstc++]=0x7b;
+  dst[dstc++]=0x70+ms/100;
+  dst[dstc++]=0x70+(ms/10)%10;
+  dst[dstc++]=0x70+ms%10;
+  return dstc;
 }
 
 /* Render.
  */
  
 void play_render() {
+
+  /* Background.
+   */
   graf_draw_rect(&g.graf,0,0,FBW,FBH,0x80a0c0ff);
+  
+  /* Terrain.
+   */
   graf_draw_decal(&g.graf,g.texid_map,0,0,0,0,FBW,FBH,0);
+  
+  /* Sprites.
+   */
   sprites_render();
   
+  /* Clock.
+   */
+  uint8_t clock[16];
+  int clockc=play_repr_clock(clock,sizeof(clock),play.play_time);
+  int dstx=FBW-8;
+  int dsty=12;
+  for (;clockc-->0;dstx-=9) {
+    if (!clock[clockc]) continue;
+    graf_draw_tile(&g.graf,g.texid_tiles,dstx,dsty,clock[clockc],0);
+  }
+  
+  /* Fade out.
+   */
   if (play.complete_clock>COMPLETE_DEBOUNCE_TIME-COMPLETE_FADE_TIME) {
     int alpha=(int)(255.0*(1.0-(COMPLETE_DEBOUNCE_TIME-play.complete_clock)/COMPLETE_FADE_TIME));
     if (alpha>0) {

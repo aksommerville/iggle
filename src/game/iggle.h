@@ -30,7 +30,16 @@ extern struct g {
   int texid_map;
   int mode; // Do not modify directly; use iggle_set_mode().
   int pvinput;
+  
+  double highscore;
+  double recentscore;
 } g;
+
+/* Checks the global (highscore). Updates and returns nonzero if this is a new highscore.
+ * Play should call every time when the game ends.
+ * Also stashes (score) as (g.recentscore), for farewell's convenience.
+ */
+int iggle_check_highscore(double score);
 
 int iggle_set_mode(int mode);
 

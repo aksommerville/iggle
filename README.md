@@ -22,11 +22,13 @@ Help the eagle put all the things in their place by flapping his wings with the 
 - - [x] When one pumpkin sits on another just by the toes, you land on the lower one and things go a little weird.
 - - - I think the best bet would be when you pick up the pumpkin, force nearby sprites within Iggle's vertical range away.
 - - [ ] Hazards.
-- - [ ] Scorekeeping.
+- - [x] Scorekeeping.
 - - [x] Proper graphics.
 - - [ ] Make grabbing a little more tolerant. Landing on a pumpkin without grabbing it should be rare.
 - - [ ] Allow certain pumpkin tiles to resist transform (the ones with text)
 - - [ ] Hello and Farewell splashes.
+- - [ ] We should allow pumpkins to stack on the goal. It's hard to avoid, and hard to explain why that's not "on goal".
+- - [ ] Need a bigger font.
 - - [ ] Proper maps.
 - - - Bonk-to-drop is not obvious. Ensure the first level or two have just one pumpkin, and then train the user on bonking.
 - - - 3-row apertures are surprisingly difficult to pass through.
