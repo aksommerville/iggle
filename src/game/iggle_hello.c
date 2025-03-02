@@ -4,6 +4,9 @@
 #define TEXT_COLOR_ACTIVE   0xffff00ff
 #define TEXT_COLOR_STATIC   0xa0c0ffff
 
+#define ALPHA_WAIT_TIME 0.750
+#define ALPHA_RAMP_TIME 1.000
+
 #define LABEL_LIMIT 8
 
 /* Label ID is also the index in strings:1
@@ -28,6 +31,10 @@ struct hello {
   int focusp; // within (labelv)
   int texid_banner;
   int bannerw,bannerh;
+  int texid_seal;
+  int sealw,sealh;
+  double alpha_wait_clock;
+  double alpha_ramp_clock;
 } hello={0};
 
 /* End.
@@ -38,6 +45,7 @@ void hello_end() {
   int i=hello.labelc;
   for (;i-->0;label++) egg_texture_del(label->texid);
   egg_texture_del(hello.texid_banner);
+  egg_texture_del(hello.texid_seal);
   memset(&hello,0,sizeof(hello));
 }
 
@@ -124,8 +132,13 @@ static struct label *hello_add_time_label(int id,double sf) {
 int hello_begin() {
   memset(&hello,0,sizeof(struct hello));
   
+  hello.alpha_wait_clock=ALPHA_WAIT_TIME;
+  hello.alpha_ramp_clock=ALPHA_RAMP_TIME;
+  
   egg_texture_load_image(hello.texid_banner=egg_texture_new(),RID_image_banner);
   egg_texture_get_status(&hello.bannerw,&hello.bannerh,hello.texid_banner);
+  egg_texture_load_image(hello.texid_seal=egg_texture_new(),RID_image_seal);
+  egg_texture_get_status(&hello.sealw,&hello.sealh,hello.texid_seal);
   
   struct label *label;
   if (!(label=hello_add_static_label(LABEL_ID_PLAY))) return -1;
@@ -188,6 +201,7 @@ int hello_begin() {
  */
  
 static void hello_move(int d) {
+  hello.alpha_wait_clock=hello.alpha_ramp_clock=0.0;
   int panic=hello.labelc;
   while (panic-->0) {
     hello.focusp+=d;
@@ -204,6 +218,7 @@ static void hello_move(int d) {
  */
  
 static void hello_adjust(int d) {
+  hello.alpha_wait_clock=hello.alpha_ramp_clock=0.0;
   if ((hello.focusp<0)||(hello.focusp>=hello.labelc)) return;
   struct label *label=hello.labelv+hello.focusp;
   switch (label->id) {
@@ -233,6 +248,10 @@ static void hello_adjust(int d) {
  */
  
 static void hello_activate() {
+  if (hello.alpha_ramp_clock>0.0) {
+    hello.alpha_wait_clock=hello.alpha_ramp_clock=0.0;
+    return;
+  }
   if ((hello.focusp<0)||(hello.focusp>=hello.labelc)) return;
   struct label *label=hello.labelv+hello.focusp;
   switch (label->id) {
@@ -254,13 +273,32 @@ void hello_update(double elapsed,int input,int pvinput) {
   if ((input&EGG_BTN_UP)&&!(pvinput&EGG_BTN_UP)) hello_move(-1);
   if ((input&EGG_BTN_DOWN)&&!(pvinput&EGG_BTN_DOWN)) hello_move(1);
   if ((input&EGG_BTN_SOUTH)&&!(pvinput&EGG_BTN_SOUTH)) hello_activate();
+  
+  if (hello.alpha_wait_clock>0.0) {
+    hello.alpha_wait_clock-=elapsed;
+  } else if (hello.alpha_ramp_clock>0.0) {
+    hello.alpha_ramp_clock-=elapsed;
+  }
 }
 
 /* Render.
  */
  
 void hello_render() {
+
   graf_draw_rect(&g.graf,0,0,FBW,FBH,0x204060ff);
+  graf_set_tint(&g.graf,0x305070ff);
+  graf_draw_decal(&g.graf,hello.texid_seal,(FBW>>1)-(hello.sealw>>1),(FBH>>1)-(hello.sealh>>1),0,0,hello.sealw,hello.sealh,0);
+  graf_set_tint(&g.graf,0);
+  
+  int alpha=0xff;
+  if (hello.alpha_wait_clock>0.0) return;
+  if (hello.alpha_ramp_clock>0.0) {
+    alpha=(int)((1.0-hello.alpha_ramp_clock/ALPHA_RAMP_TIME)*255.0);
+    if (alpha<1) return;
+    if (alpha>0xff) alpha=0xff;
+    graf_set_alpha(&g.graf,alpha);
+  }
   graf_draw_decal(&g.graf,hello.texid_banner,(FBW>>1)-(hello.bannerw>>1),0,0,0,hello.bannerw,hello.bannerh,0);
   struct label *label=hello.labelv;
   int i=hello.labelc,hlt=hello.focusp;
@@ -269,4 +307,5 @@ void hello_render() {
     graf_draw_decal(&g.graf,label->texid,label->x,label->y,0,0,label->w,label->h,0);
     if (hlt==-1) graf_set_tint(&g.graf,0);
   }
+  if (alpha!=0xff) graf_set_alpha(&g.graf,0xff);
 }

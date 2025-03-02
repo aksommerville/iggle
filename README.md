@@ -39,9 +39,14 @@ Help the eagle put all the things in their place by flapping his wings with the 
 - - [x] Press Start to reset level.
 - - [x] Music.
 - - [x] Sound effects.
+- - [x] Title banner has got to go. Try something hand-drawn.
 - - [ ] Itch page.
-- - [ ] Have an arguably complete game by EOD. I don't want to do a lot during the week.
+- - [x] Have an arguably complete game by EOD. I don't want to do a lot during the week.
 - - [ ] Submit to jam? We can keep revising once submitted, I believe.
+- - [x] Swap maps 5 and 6; 5 is more difficult.
+- - [ ] Ending is kind of abrupt.
+- - - [x] Something more "You Win!" than "Game Over", make it positive.
+- - - [ ] Can we style the last map to make it feel more like a finale?
 - Mon 2025-03-03
 - Tue 2025-03-04
 - Wed 2025-03-05
