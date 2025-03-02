@@ -15,6 +15,7 @@
 #define LABEL_ID_QUIT 11
 #define LABEL_ID_BY_AK 14
 #define LABEL_ID_HIGHSCORE 4
+#define LABEL_ID_LAST_MAP 15
 
 struct hello {
   struct label {
@@ -129,6 +130,10 @@ int hello_begin() {
   struct label *label;
   if (!(label=hello_add_static_label(LABEL_ID_PLAY))) return -1;
   label->selectable=1;
+  /*XXX Cheatsy option to play only the last map -- important as I'm developing the maps. Don't leave this enabled. *
+  if (!(label=hello_add_static_label(LABEL_ID_LAST_MAP))) return -1;
+  label->selectable=1;
+  /**/
   /*TODO Enable this if we translate. ...I really don't think there's much need.
   if (!(label=hello_add_string_label(LABEL_ID_LANGUAGE,1))) return -1;
   label->selectable=1;
@@ -236,6 +241,7 @@ static void hello_activate() {
     case LABEL_ID_MUSIC: hello_adjust(1); break;
     case LABEL_ID_SOUND: hello_adjust(1); break;
     case LABEL_ID_QUIT: egg_terminate(0); break;
+    case LABEL_ID_LAST_MAP: g.advance_to_last_map=1; iggle_set_mode(IGGLE_MODE_PLAY); g.advance_to_last_map=0; break;
   }
 }
 

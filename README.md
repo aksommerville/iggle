@@ -30,14 +30,15 @@ Help the eagle put all the things in their place by flapping his wings with the 
 - - [x] We should allow pumpkins to stack on the goal. It's hard to avoid, and hard to explain why that's not "on goal".
 - - [x] Cheat hero's hit box down at the top when flying, he hits the ceiling too soon. ...no reason to do it only while flying, much easier to shorten him always.
 - - [x] Need a bigger font.
-- - [ ] Proper maps.
+- - [x] Proper maps.
 - - - Bonk-to-drop is not obvious. Ensure the first level or two have just one pumpkin, and then train the user on bonking.
 - - - 3-row apertures are surprisingly difficult to pass through.
 - - - 45-degree slopes, both ceiling and floor, are pretty annoying.
+- - - ...6 maps and it seems a pretty nice spread of difficulty. I can just barely complete all 6 in under 2 minutes. Expect 5-10 for a new player?
 - Sun 2025-03-02
-- - [ ] Press Start to reset level.
+- - [x] Press Start to reset level.
 - - [x] Music.
-- - [ ] Sound effects.
+- - [x] Sound effects.
 - - [ ] Itch page.
 - - [ ] Have an arguably complete game by EOD. I don't want to do a lot during the week.
 - - [ ] Submit to jam? We can keep revising once submitted, I believe.

@@ -25,7 +25,9 @@ void play_end() {
  
 int play_begin() {
   memset(&play,0,sizeof(play));
-  if (play_load_map(1)<0) return -1;
+  int mapid=1;
+  if (g.advance_to_last_map) mapid=g.last_map_id;
+  if (play_load_map(mapid)<0) return -1;
   if (g.enable_music) egg_play_song(RID_song_longhorn,0,1);
   return 0;
 }
@@ -67,6 +69,9 @@ static int play_is_complete() {
  
 void play_update(double elapsed,int input,int pvinput) {
 
+  if ((input&EGG_BTN_AUX1)&&!(pvinput&EGG_BTN_AUX1)) {
+    play_load_map(play.mapid);
+  }
   if ((input&EGG_BTN_SOUTH)&&!(pvinput&EGG_BTN_SOUTH)) sprite_hero_button(sprite_any_of_type(&sprite_type_hero),1);
   else if (!(input&EGG_BTN_SOUTH)&&(pvinput&EGG_BTN_SOUTH)) sprite_hero_button(sprite_any_of_type(&sprite_type_hero),0);
 

@@ -32,6 +32,8 @@ extern struct g {
   int mode; // Do not modify directly; use iggle_set_mode().
   int pvinput;
   uint8_t physics[256];
+  int advance_to_last_map; // silly hack, noop in real life
+  int last_map_id; // ''
   
   double highscore;
   double recentscore;

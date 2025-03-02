@@ -128,9 +128,8 @@ int egg_client_init() {
   struct rom_res *res;
   while (res=rom_reader_next(&reader)) {
     switch (res->tid) {
-      case EGG_TID_map:
-      case EGG_TID_sprite:
-        break;
+      case EGG_TID_map: if (res->rid>g.last_map_id) g.last_map_id=res->rid; break;
+      case EGG_TID_sprite: break;
       case EGG_TID_tilesheet: iggle_load_tilesheet(res->v,res->c); continue;
       default: continue;
     }

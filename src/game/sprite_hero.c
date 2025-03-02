@@ -49,6 +49,7 @@ static int _hero_init(struct sprite *sprite) {
   SPRITE->facedir=1.0f;
   SPRITE->velocity=HORZ_MIN;
   SPRITE->button_clock=999.999;
+  SPRITE->grounded=1;
   return 0;
 }
 

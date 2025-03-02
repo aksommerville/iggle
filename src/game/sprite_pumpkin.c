@@ -26,9 +26,9 @@ static void _pumpkin_del(struct sprite *sprite) {
  */
  
 static int _pumpkin_init(struct sprite *sprite) {
-  sprite->px=-0.5;
+  sprite->px=-0.45;
   sprite->py=-0.5;
-  sprite->pw=1.0;
+  sprite->pw=0.9;
   sprite->ph=1.0;
   if (!(sprite->tileid=sprite->arg>>24)) {
     sprite->tileid=0x50;

@@ -109,6 +109,7 @@ int sprite_collide(struct sprite *sprite,double corrx,double corry) {
     int i=spritec;
     while (i-->0) {
       const struct sprite *other=spritev[i];
+      if (other->defunct) continue;
       if (other==sprite) continue;
       if (!other->solid) continue;
       double ol=other->x+other->px;
