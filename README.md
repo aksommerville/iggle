@@ -40,13 +40,13 @@ Help the eagle put all the things in their place by flapping his wings with the 
 - - [x] Music.
 - - [x] Sound effects.
 - - [x] Title banner has got to go. Try something hand-drawn.
-- - [ ] Itch page.
+- - [x] Itch page.
 - - [x] Have an arguably complete game by EOD. I don't want to do a lot during the week.
-- - [ ] Submit to jam? We can keep revising once submitted, I believe.
+- - [x] Submit to jam? We can keep revising once submitted, I believe.
 - - [x] Swap maps 5 and 6; 5 is more difficult.
-- - [ ] Ending is kind of abrupt.
+- - [x] Ending is kind of abrupt.
 - - - [x] Something more "You Win!" than "Game Over", make it positive.
-- - - [ ] Can we style the last map to make it feel more like a finale?
+- - - [x] Can we style the last map to make it feel more like a finale? ...the new Level 7 is really tricky, I think that's good enough.
 - Mon 2025-03-03
 - Tue 2025-03-04
 - Wed 2025-03-05
@@ -56,5 +56,6 @@ Help the eagle put all the things in their place by flapping his wings with the 
 Stretch goals, whenever:
 - [ ] Minicomic.
 - [ ] Ridiculously excessive background graphics. Thinking, clouds moving and parting, trees blowing in the wind, lights going on and off in the distant city...
-- [ ] Hand-drawn graphics for the foreground? Might look cool...
-- [ ] Even if not hand-drawn, a rotating sprite for the wing would probly be a good touch.
+- - Got sun, moon, and stars. We could still do clouds, terrain, what-have-you...
+- [x] Hand-drawn graphics for the foreground? Might look cool... ...nah
+- [x] Even if not hand-drawn, a rotating sprite for the wing would probly be a good touch. ...nah, I like it as is

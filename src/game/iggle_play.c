@@ -1,4 +1,5 @@
 #include "iggle.h"
+#include "sky.h"
 
 /* On completion, it has to actually *stay* complete for so long.
  */
@@ -12,6 +13,7 @@ struct play {
   int cmdc;
   double complete_clock;
   double play_time; // For scoring purposes. All levels.
+  struct sky sky;
 } play={0};
 
 /* End.
@@ -25,6 +27,7 @@ void play_end() {
  
 int play_begin() {
   memset(&play,0,sizeof(play));
+  sky_init(&play.sky);
   int mapid=1;
   if (g.advance_to_last_map) mapid=g.last_map_id;
   if (play_load_map(mapid)<0) return -1;
@@ -68,6 +71,7 @@ static int play_is_complete() {
  */
  
 void play_update(double elapsed,int input,int pvinput) {
+  sky_update(&play.sky,elapsed);
 
   if ((input&EGG_BTN_AUX1)&&!(pvinput&EGG_BTN_AUX1)) {
     play_load_map(play.mapid);
@@ -124,7 +128,8 @@ void play_render() {
 
   /* Background.
    */
-  graf_draw_rect(&g.graf,0,0,FBW,FBH,0x80a0c0ff);
+  sky_render(&play.sky);
+  //return;
   
   /* Terrain.
    */
