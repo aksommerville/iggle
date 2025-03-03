@@ -85,6 +85,7 @@ static void hero_update_fly(struct sprite *sprite,double elapsed) {
     if (SPRITE->pumpkin) {
       if (sprite_exists(SPRITE->pumpkin)) {
         SPRITE->pumpkin->solid=1;
+        //SPRITE->pumpkin->y+=0.250; // doesn't help
       }
       if (g.enable_sound) egg_play_sound(RID_sound_fullbonk);
       SPRITE->pumpkin=0;

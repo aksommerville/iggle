@@ -66,4 +66,5 @@ Stretch goals, whenever:
 
 ## High Scores
 
-2:37.305 AK 2024-03-02T18:50
+2:37.305 AK 2024-03-02
+2:32.776 AK 2024-03-03

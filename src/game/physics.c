@@ -83,10 +83,10 @@ int sprite_collide(struct sprite *sprite,double corrx,double corry) {
   
   /* Map.
    */
-  int cola=(int)l; if (cola<0) cola=0;
-  int colz=(int)r; if (colz>=NS_sys_mapw) colz=NS_sys_mapw-1;
-  int rowa=(int)t; if (rowa<0) rowa=0;
-  int rowz=(int)b; if (rowz>=NS_sys_maph) rowz=NS_sys_maph-1;
+  int cola=(int)(l+0.001); if (cola<0) cola=0;
+  int colz=(int)(r-0.001); if (colz>=NS_sys_mapw) colz=NS_sys_mapw-1;
+  int rowa=(int)(t+0.001); if (rowa<0) rowa=0; // Strange but true: When t=2.000 exactly, (int)t comes out as 1.
+  int rowz=(int)(b-0.001); if (rowz>=NS_sys_maph) rowz=NS_sys_maph-1;
   if ((cola<=colz)&&(rowa<=rowz)) {
     const uint8_t *cellsrow=play_get_map()+rowa*NS_sys_mapw+cola;
     int row=rowa; for (;row<=rowz;row++,cellsrow+=NS_sys_mapw) {
