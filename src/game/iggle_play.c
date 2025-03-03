@@ -129,7 +129,6 @@ void play_render() {
   /* Background.
    */
   sky_render(&play.sky);
-  //return;
   
   /* Terrain.
    */

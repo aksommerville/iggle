@@ -3,6 +3,8 @@
 
 #define SKY_DAY_RATE (1/500.0) /* day/sec. I want it possible to finish before sunset, if you push it. 500 = Sunset around 3:15, just beatable. */
 #define SUN_SPIN_RATE 2.0 /* rad/sec */
+#define WINDD_RANGE 110.0 /* px/s**2 */
+#define WIND_LIMIT 10.0 /* px/s */
 
 /* Initialize star.
  */
@@ -19,6 +21,43 @@ static void star_init(struct star *star) {
   star->fz=star->tz-0.005;
 }
 
+/* Initialize cloud.
+ * (edge) zero to place randomly anywhere in the sky.
+ * Or <0 to create on the left edge, >0 to create on the right edge.
+ */
+ 
+static void cloud_init(struct cloud *cloud,int edge) {
+  if (edge<0) {
+    cloud->x=-5.0;
+    cloud->dx=((rand()&0x7fff)*WIND_LIMIT)/32767.0;
+    cloud->ddx=((rand()&0x7fff)*WINDD_RANGE)/32767.0; // doesn't strictly need to be positive, but give the cloud a chance of seeing center stage
+  } else if (edge>0) {
+    cloud->x=FBW+5.0;
+    cloud->dx=((rand()&0x7fff)*WIND_LIMIT)/-32767.0;
+    cloud->ddx=((rand()&0x7fff)*WINDD_RANGE)/-32767.0;
+  } else {
+    cloud->x=rand()%FBW;
+    cloud->dx=(((rand()&0x7fff)-16384.0)*WIND_LIMIT)/16384.0;
+    cloud->ddx=(((rand()&0x7fff)-16384.0)*WINDD_RANGE)/16384.0;
+  }
+  cloud->y=rand()%FBH;
+  struct puff *puff=cloud->puffv;
+  int i=PUFF_COUNT;
+  for (;i-->0;puff++) {
+    puff->x=((rand()&0xff)-0x80)/12.8;
+    puff->y=((rand()&0xff)-0x80)/12.8;
+    puff->xform=(rand()&1)?EGG_XFORM_XREV:0;
+    switch (rand()%6) {
+      case 0: puff->tileid=0x86; break;
+      case 1: puff->tileid=0x87; break;
+      case 2: puff->tileid=0x88; break;
+      case 3: puff->tileid=0x96; break;
+      case 4: puff->tileid=0x97; break;
+      case 5: puff->tileid=0x98; break;
+    }
+  }
+}
+
 /* Init.
  */
  
@@ -27,6 +66,69 @@ void sky_init(struct sky *sky) {
   struct star *star=sky->starv;
   int i=STAR_COUNT;
   for (;i-->0;star++) star_init(star);
+  struct cloud *cloud=sky->cloudv;
+  for (i=CLOUD_COUNT;i-->0;cloud++) cloud_init(cloud,0);
+}
+
+/* Update cloud.
+ */
+ 
+static void update_cloud(struct sky *sky,struct cloud *cloud,double elapsed) {
+  double pvdx=cloud->dx;
+  cloud->ddx+=(((rand()&0x7fff)-16384.0)*WINDD_RANGE*elapsed)/16384.0;
+  cloud->dx+=cloud->ddx*elapsed;
+  if (cloud->dx<-WIND_LIMIT) cloud->dx=-WIND_LIMIT;
+  else if (cloud->dx>WIND_LIMIT) cloud->dx=WIND_LIMIT;
+  cloud->x+=cloud->dx*elapsed;
+  if (cloud->dx<0.0) {
+    if (cloud->x<-10.0) cloud_init(cloud,1);
+  } else {
+    if (cloud->x>FBW+10.0) cloud_init(cloud,-1);
+  }
+  
+  /* Puffs are drawn toward the center but away from each other.
+   */
+  const double PUFF_CENTRAL_SPEED=4.0;
+  const double PUFF_DECOHERE_SPEED=6.0;
+  const double PUFF_SPEED_LIMIT=3.0;
+  double cx=0.0,cy=0.0;
+  struct puff *puff=cloud->puffv;
+  int i=PUFF_COUNT;
+  for (;i-->0;puff++) {
+    cx+=puff->x;
+    cy+=puff->y;
+  }
+  cx/=PUFF_COUNT;
+  cy/=PUFF_COUNT;
+  for (puff=cloud->puffv,i=PUFF_COUNT;i-->0;puff++) {
+  
+    if (puff->x>0.0) puff->dx-=PUFF_CENTRAL_SPEED*elapsed;
+    else puff->dx+=PUFF_CENTRAL_SPEED*elapsed;
+    if (puff->y>0.0) puff->dy-=PUFF_CENTRAL_SPEED*elapsed;
+    else puff->dy+=PUFF_CENTRAL_SPEED*elapsed;
+  
+    double rx=0.0,ry=0.0;
+    struct puff *other=cloud->puffv;
+    int bi=PUFF_COUNT;
+    for (;bi-->0;other++) {
+      if (other->x!=puff->x) rx+=1.0/(other->x-puff->x);
+      if (other->y!=puff->y) ry+=1.0/(other->y-puff->y);
+    }
+    double rmag=sqrt(rx*rx+ry*ry);
+    if (rmag>0.001) {
+      rx/=rmag;
+      ry/=rmag;
+      puff->dx+=rx*elapsed*PUFF_DECOHERE_SPEED;
+      puff->dy+=ry*elapsed*PUFF_DECOHERE_SPEED;
+      if (puff->dx<-PUFF_SPEED_LIMIT) puff->dx=-PUFF_SPEED_LIMIT;
+      else if (puff->dx>PUFF_SPEED_LIMIT) puff->dx=PUFF_SPEED_LIMIT;
+      if (puff->dy<-PUFF_SPEED_LIMIT) puff->dy=-PUFF_SPEED_LIMIT;
+      else if (puff->dy>PUFF_SPEED_LIMIT) puff->dy=PUFF_SPEED_LIMIT;
+    }
+    
+    puff->x+=puff->dx*elapsed;
+    puff->y+=puff->dy*elapsed;
+  }
 }
 
 /* Update.
@@ -39,6 +141,10 @@ void sky_update(struct sky *sky,double elapsed) {
   
   sky->sunt+=elapsed*SUN_SPIN_RATE;
   if (sky->sunt>=M_PI) sky->sunt-=M_PI*2.0;
+  
+  struct cloud *cloud=sky->cloudv;
+  int i=CLOUD_COUNT;
+  for (;i-->0;cloud++) update_cloud(sky,cloud,elapsed);
 }
 
 /* Sky color for a normalized time of day.
@@ -111,7 +217,8 @@ void sky_render(struct sky *sky) {
 
   /* Background.
    */
-  graf_draw_rect(&g.graf,0,0,FBW,FBH,sky_color(sky->dayp));
+  uint32_t bgcolor=sky_color(sky->dayp);
+  graf_draw_rect(&g.graf,0,0,FBW,FBH,bgcolor);
   
   /* Stars.
    */
@@ -142,4 +249,22 @@ void sky_render(struct sky *sky) {
     graf_draw_mode7(&g.graf,g.texid_tiles,dstx,dsty,NS_sys_tilesize*2,NS_sys_tilesize*8,NS_sys_tilesize*2,NS_sys_tilesize*2,1.0,1.0,-sky->sunt,1);
     graf_draw_mode7(&g.graf,g.texid_tiles,dstx,dsty,0,NS_sys_tilesize*8,NS_sys_tilesize*2,NS_sys_tilesize*2,1.0,1.0,sky->sunt,1);
   }
+  
+  /* Clouds.
+   */
+  graf_set_alpha(&g.graf,0x80);
+  graf_set_tint(&g.graf,(bgcolor&0xffffff00)|0xc0);
+  struct cloud *cloud=sky->cloudv;
+  int i=CLOUD_COUNT;
+  for (;i-->0;cloud++) {
+    struct puff *puff=cloud->puffv;
+    int ii=PUFF_COUNT;
+    for (;ii-->0;puff++) {
+      int x=(int)(cloud->x+puff->x);
+      int y=(int)(cloud->y+puff->y);
+      graf_draw_tile(&g.graf,g.texid_tiles,x,y,puff->tileid,puff->xform);
+    }
+  }
+  graf_set_alpha(&g.graf,0xff);
+  graf_set_tint(&g.graf,0);
 }

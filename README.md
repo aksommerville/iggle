@@ -55,7 +55,15 @@ Help the eagle put all the things in their place by flapping his wings with the 
 
 Stretch goals, whenever:
 - [ ] Minicomic.
-- [ ] Ridiculously excessive background graphics. Thinking, clouds moving and parting, trees blowing in the wind, lights going on and off in the distant city...
+- [x] Ridiculously excessive background graphics. Thinking, clouds moving and parting, trees blowing in the wind, lights going on and off in the distant city...
 - - Got sun, moon, and stars. We could still do clouds, terrain, what-have-you...
 - [x] Hand-drawn graphics for the foreground? Might look cool... ...nah
 - [x] Even if not hand-drawn, a rotating sprite for the wing would probly be a good touch. ...nah, I like it as is
+- [x] Replace the green terrain tiles until we run out of tilesheet.
+- - ...there's still some tilesheet left, but I think this is as far as it goes.
+- [ ] When we're done replacing graphics, update the screencaps on Itch.
+- [x] Anti-alias edge of sun, the rotating one. Transparent pixels save black and get used for interpolation.
+
+## High Scores
+
+2:37.305 AK 2024-03-02T18:50

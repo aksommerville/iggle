@@ -92,7 +92,6 @@ static void hero_update_fly(struct sprite *sprite,double elapsed) {
     } else {
       if (g.enable_sound) egg_play_sound(RID_sound_emptybonk);
     }
-    //TODO bonk face
     SPRITE->flap=0;
     SPRITE->velocity*=BONK_VELOCITY_LOSS;
     SPRITE->gravity=BONK_GRAVITY;
