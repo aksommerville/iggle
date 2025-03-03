@@ -61,7 +61,7 @@ Stretch goals, whenever:
 - [x] Even if not hand-drawn, a rotating sprite for the wing would probly be a good touch. ...nah, I like it as is
 - [x] Replace the green terrain tiles until we run out of tilesheet.
 - - ...there's still some tilesheet left, but I think this is as far as it goes.
-- [ ] When we're done replacing graphics, update the screencaps on Itch.
+- [x] When we're done replacing graphics, update the screencaps on Itch.
 - [x] Anti-alias edge of sun, the rotating one. Transparent pixels save black and get used for interpolation.
 
 ## High Scores
