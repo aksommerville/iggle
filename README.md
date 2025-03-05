@@ -74,5 +74,6 @@ Stretch goals, whenever:
 - 2:31.547 AK 2024-03-03
 - 2:30.632 AK 2024-03-03
 - 2:20.501 AK 2024-03-03 -- Almost flawless. Tho there might be better strategies.
+- 2:14.246 AK 2024-03-05 -- After a small change to make Up more sensitive.
 
 - 10:07.359 Dean 2024-03-03

@@ -2,7 +2,7 @@
 
 #define MAX_FLAP_TIME         0.333 /* s */
 #define MAX_RISE_TIME         0.125 /* s */
-#define GRAVITY_BLACKOUT_TIME 0.100 /* s */
+#define GRAVITY_BLACKOUT_TIME 0.125 /* s */
 #define MAX_FLAP_POWER       15.000 /* m/s */
 #define GRAVITY_RATE          4.000 /* m/s**2 */
 #define GRAVITY_LIMIT         8.000 /* m/s */
@@ -167,9 +167,17 @@ static struct sprite *hero_check_and_apply_pumpkin(struct sprite *sprite) {
  */
  
 static void hero_update_fall(struct sprite *sprite,double elapsed) {
-  // There's no gravity while flapping, that's a higher level concern.
-  // But also, each flap, even impulses, has a guaranteed minimum no-gravity time.
-  if (SPRITE->button_clock<GRAVITY_BLACKOUT_TIME) return;
+
+  /* There's no gravity while flapping, that's a higher level concern.
+   * But also, each flap, even impulses, has a guaranteed minimum no-gravity time.
+   * And as I play it more, I think we should actually keep going up for some time after the release, if we're still under MAX_RISE_TIME (which is longer than GRAVITY_BLACKOUT_TIME).
+   * I want rapid taps to take you up hard.
+   */
+  if (SPRITE->button_clock<GRAVITY_BLACKOUT_TIME) {
+    hero_update_fly(sprite,elapsed);
+    return;
+  }
+
   if ((SPRITE->gravity+=GRAVITY_RATE*elapsed)>GRAVITY_LIMIT) SPRITE->gravity=GRAVITY_LIMIT;
   sprite->y+=SPRITE->gravity*elapsed;
   if (sprite_collide(sprite,0.0,-1.0)) {
