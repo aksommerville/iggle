@@ -51,7 +51,7 @@ Help the eagle put all the things in their place by flapping his wings with the 
 - Tue 2025-03-04
 - - [x] Dust clouds on landing.
 - - [x] "On goal" indicator.
-- - [ ] Can we do another level or two?
+- - [x] Can we do another level or two?
 - Wed 2025-03-05
 - Thu 2025-03-06
 - Fri 2025-03-07
@@ -77,3 +77,5 @@ Stretch goals, whenever:
 - 2:14.246 AK 2024-03-05 -- After a small change to make Up more sensitive.
 
 - 10:07.359 Dean 2024-03-03
+
+- All the above scores are before level 8. 8 is super simple, shouldn't add much, but still.
