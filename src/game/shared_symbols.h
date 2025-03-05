@@ -23,8 +23,10 @@
 
 #define NS_spritetype_hero 1
 #define NS_spritetype_pumpkin 2
+#define NS_spritetype_dust 3
 #define NS_FOR_EACH_spritetype \
   _(hero) \
-  _(pumpkin)
+  _(pumpkin) \
+  _(dust)
 
 #endif

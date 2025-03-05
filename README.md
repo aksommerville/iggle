@@ -49,12 +49,15 @@ Help the eagle put all the things in their place by flapping his wings with the 
 - - - [x] Can we style the last map to make it feel more like a finale? ...the new Level 7 is really tricky, I think that's good enough.
 - Mon 2025-03-03
 - Tue 2025-03-04
+- - [x] Dust clouds on landing.
+- - [x] "On goal" indicator.
+- - [ ] Can we do another level or two?
 - Wed 2025-03-05
 - Thu 2025-03-06
 - Fri 2025-03-07
 
 Stretch goals, whenever:
-- [ ] Minicomic.
+- [x] Minicomic. ...nah, I can't think up a story line.
 - [x] Ridiculously excessive background graphics. Thinking, clouds moving and parting, trees blowing in the wind, lights going on and off in the distant city...
 - - Got sun, moon, and stars. We could still do clouds, terrain, what-have-you...
 - [x] Hand-drawn graphics for the foreground? Might look cool... ...nah
@@ -66,5 +69,10 @@ Stretch goals, whenever:
 
 ## High Scores
 
-2:37.305 AK 2024-03-02
-2:32.776 AK 2024-03-03
+- 2:37.305 AK 2024-03-02
+- 2:32.776 AK 2024-03-03
+- 2:31.547 AK 2024-03-03
+- 2:30.632 AK 2024-03-03
+- 2:20.501 AK 2024-03-03 -- Almost flawless. Tho there might be better strategies.
+
+- 10:07.359 Dean 2024-03-03

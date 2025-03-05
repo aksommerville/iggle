@@ -8,10 +8,13 @@
 #define GRAVITY_MIN   3.000
 #define GRAVITY_RATE  5.000 /* Keep pumpkins' gravity slightly faster than Iggle's. */
 #define GRAVITY_LIMIT 9.000 /* This way there's no danger of accidentally re-grabbing it after a bonk. */
+#define HEART_PERIOD 1.000
+#define HEART_DUTY_CYCLE 0.750
 
 struct sprite_pumpkin {
   struct sprite hdr;
   double gravity;
+  double heartclock;
 };
 
 #define SPRITE ((struct sprite_pumpkin*)sprite)
@@ -156,6 +159,7 @@ static void _pumpkin_update(struct sprite *sprite,double elapsed) {
       if (wasfalling) {
         if (g.enable_sound) egg_play_sound(RID_sound_pumpkinfall);
         pumpkin_check_goal(sprite);
+        sprite_spawn(&sprite_type_dust,sprite->x,sprite->y,0);
       }
       SPRITE->gravity=0.0;
     }
@@ -165,6 +169,8 @@ static void _pumpkin_update(struct sprite *sprite,double elapsed) {
     SPRITE->gravity=0.0;
     pumpkin_check_goal(sprite);
   }
+  
+  if ((SPRITE->heartclock+=elapsed)>=HEART_PERIOD) SPRITE->heartclock-=HEART_PERIOD;
 }
 
 /* Render.
@@ -175,6 +181,11 @@ static void _pumpkin_render(struct sprite *sprite,int x,int y) {
   // The two books should not transform, because they have visible text. Not that the text matters.
   if ((sprite->tileid==0x53)||(sprite->tileid==0x56)) xform=0;
   graf_draw_tile(&g.graf,g.texid_tiles,x,y,sprite->tileid,xform);
+  if (sprite->ongoal) {
+    uint8_t tileid=0x65;
+    if (SPRITE->heartclock>HEART_DUTY_CYCLE) tileid++;
+    graf_draw_tile(&g.graf,g.texid_tiles,x,y-NS_sys_tilesize,tileid,0);
+  }
 }
 
 /* Type definition.

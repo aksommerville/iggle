@@ -173,11 +173,13 @@ static void hero_update_fall(struct sprite *sprite,double elapsed) {
   if ((SPRITE->gravity+=GRAVITY_RATE*elapsed)>GRAVITY_LIMIT) SPRITE->gravity=GRAVITY_LIMIT;
   sprite->y+=SPRITE->gravity*elapsed;
   if (sprite_collide(sprite,0.0,-1.0)) {
-    if (SPRITE->pumpkin) {
+    if (sprite_exists(SPRITE->pumpkin)) {
       if (g.enable_sound) egg_play_sound(RID_sound_alight);
+      sprite_spawn(&sprite_type_dust,SPRITE->pumpkin->x,SPRITE->pumpkin->y,0);
     } else if (hero_check_and_apply_pumpkin(sprite)) {
     } else {
       if (g.enable_sound) egg_play_sound(RID_sound_alight);
+      sprite_spawn(&sprite_type_dust,sprite->x,sprite->y,0);
     }
     SPRITE->grounded=1;
     SPRITE->velocity=HORZ_MIN;
