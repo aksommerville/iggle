@@ -79,3 +79,6 @@ Stretch goals, whenever:
 - 10:07.359 Dean 2024-03-03
 
 - All the above scores are before level 8. 8 is super simple, shouldn't add much, but still.
+
+- 2:30.889 AK 2024-03-05
+- 2:28.472 AK 2024-03-05

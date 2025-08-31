@@ -165,7 +165,7 @@ int egg_client_init() {
 void egg_client_update(double elapsed) {
   int pvinput=g.pvinput;
   int input=egg_input_get_one(0);
-  if (input&EGG_BTN_AUX3) egg_terminate(0);
+  if (input&(EGG_BTN_AUX3|EGG_BTN_AUX2)) egg_terminate(0);
   g.pvinput=input;
   switch (g.mode) {
     case IGGLE_MODE_PLAY: play_update(elapsed,input,pvinput); break;
